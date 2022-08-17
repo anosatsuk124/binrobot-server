@@ -1,10 +1,12 @@
 import * as ws from 'ws';
 import * as dotenv from 'dotenv';
+import * as http from 'http';
 dotenv.config();
 
 const PORT = Number(process.env.PORT) || 3000;
 
-const wss = new ws.Server({ port: PORT });
+const server = http.createServer();
+const wss = new ws.Server({ server: server });
 const clientsByChannel = new Map();
 
 wss.on('connection', (client, req) => {
@@ -35,3 +37,5 @@ wss.on('connection', (client, req) => {
         client.send(data);
     });
 });
+
+server.listen(PORT);
